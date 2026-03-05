@@ -37,7 +37,7 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="319dp"
+        android:layout_height="168dp"
         android:background="@color/colorPrimary"
         app:titleTextColor="@android:color/white" />
 

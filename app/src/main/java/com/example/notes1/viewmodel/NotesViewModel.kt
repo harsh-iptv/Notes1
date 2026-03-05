@@ -16,9 +16,7 @@ class NotesViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel
     // Backing list stored in SavedStateHandle for rotation survival
     private val _allNotes = MutableLiveData<MutableList<Note>>(
         savedStateHandle.get<ArrayList<Note>>(KEY_NOTES)?.toMutableList() ?: mutableListOf(
-            Note(title = "Welcome to Notes!", content = "Tap the + button to create a new note. Long press a note to delete it."),
-            Note(title = "Tips & Tricks", content = "• Swipe to refresh\n• Long press to delete\n• Tap to view details\n• Use the search bar to filter notes"),
-            Note(title = "Sample Note", content = "This is a sample note to show how the app works. You can write anything here!")
+
         )
     )
     val allNotes: LiveData<MutableList<Note>> = _allNotes
