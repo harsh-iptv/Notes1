@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Notes App</string>
+    <string name="add_note">New Note</string>
+    <string name="note_detail">Note Detail</string>
+    <string name="note_index">%1$d</string>
+</resources>
