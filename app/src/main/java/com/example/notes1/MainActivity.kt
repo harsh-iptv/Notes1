@@ -23,11 +23,14 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.notes1.adapter.NotesAdapter
+import com.example.notes1.databinding.ActivityMainBinding
 import com.example.notes1.model.Note
 import com.example.notes1.viewmodel.NotesViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
+
+
 
     companion object {
         private const val TAG = "MainActivity"
@@ -75,7 +78,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // ─── Lifecycle Callbacks ───────────────────────────────────────────────
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -125,7 +128,6 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "onRestoreInstanceState() called")
     }
 
-    // ─── Setup ────────────────────────────────────────────────────────────
 
     private fun setupToolbar() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
@@ -187,7 +189,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // ─── Permission ───────────────────────────────────────────────────────
+
 
     private fun requestStoragePermission() {
         val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -216,7 +218,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // ─── Menu ─────────────────────────────────────────────────────────────
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
@@ -237,7 +239,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // ─── Dialogs ──────────────────────────────────────────────────────────
+
 
     private fun showDeleteDialog(note: Note) {
         AlertDialog.Builder(this)
