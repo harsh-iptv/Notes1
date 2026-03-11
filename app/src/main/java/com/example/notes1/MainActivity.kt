@@ -1,5 +1,4 @@
 package com.example.notes1
-
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager

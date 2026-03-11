@@ -50,7 +50,6 @@ class NoteDetailActivity : AppCompatActivity() {
     override fun onStop() { super.onStop(); Log.d(TAG, "onStop()") }
     override fun onDestroy() { super.onDestroy(); Log.d(TAG, "onDestroy()") }
 
-    // ─── Setup ────────────────────────────────────────────────────────────
 
     private fun setupToolbar() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)

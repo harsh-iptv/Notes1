@@ -1,17 +1,27 @@
 package com.example.notes1.model
 
 import android.os.Parcelable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 import java.text.SimpleDateFormat
+import androidx.room.ColumnInfo
+import androidx.room.Ignore
 import java.util.*
-
+@Entity(tableName = "Notes")
 @Parcelize
 data class Note(
-    val id: Long = System.currentTimeMillis(),
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id")
+    val id: Long = 0,
+    @ColumnInfo(name = "title")
     val title: String,
+    @ColumnInfo(name = "content")
     val content: String,
+    @ColumnInfo(name = "timestamp")
     val timestamp: Long = System.currentTimeMillis(),
-    val color: Int = 0
+    @ColumnInfo(name = "color")
+    @Ignore val color: Int = 0
 ) : Parcelable {
 
     fun getFormattedDate(): String {
