@@ -23,7 +23,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.notes1.adapter.NotesAdapter
-import com.example.notes1.databinding.ActivityMainBinding
+
 import com.example.notes1.model.Note
 import com.example.notes1.viewmodel.NotesViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private const val TAG = "MainActivity"
         const val EXTRA_NOTE = "extra_note"
-        const val REQUEST_ADD_NOTE = 1001
+
     }
 
     // ViewModel survives rotation via SavedStateHandle

@@ -13,13 +13,13 @@ class NotesViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel
         private const val KEY_SEARCH_QUERY = "search_query"
     }
 
-    // Backing list stored in SavedStateHandle for rotation survival
+
     private val _allNotes = MutableLiveData<MutableList<Note>>(
         savedStateHandle.get<ArrayList<Note>>(KEY_NOTES)?.toMutableList() ?: mutableListOf(
 
         )
     )
-    val allNotes: LiveData<MutableList<Note>> = _allNotes
+
 
     private val _filteredNotes = MutableLiveData<List<Note>>()
     val filteredNotes: LiveData<List<Note>> = _filteredNotes
@@ -49,16 +49,7 @@ class NotesViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel
         applyFilter()
     }
 
-    fun updateNote(updatedNote: Note) {
-        val list = _allNotes.value ?: return
-        val index = list.indexOfFirst { it.id == updatedNote.id }
-        if (index != -1) {
-            list[index] = updatedNote
-            _allNotes.value = list
-            savedStateHandle[KEY_NOTES] = ArrayList(list)
-            applyFilter()
-        }
-    }
+
 
     fun setSearchQuery(query: String) {
         _searchQuery.value = query

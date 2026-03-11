@@ -20,7 +20,6 @@ class NoteDetailActivity : AppCompatActivity() {
 
     private var note: Note? = null
 
-    // ─── Lifecycle ────────────────────────────────────────────────────────
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,7 +83,7 @@ class NoteDetailActivity : AppCompatActivity() {
         return when (item.itemId) {
             android.R.id.home -> { onBackPressedDispatcher.onBackPressed(); true }
             R.id.action_delete -> { showDeleteConfirmation(); true }
-            R.id.action_share -> { shareNote(); true }
+            //R.id.action_share -> { shareNote(); true }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -105,7 +104,7 @@ class NoteDetailActivity : AppCompatActivity() {
             .show()
     }
 
-    private fun shareNote() {
+    /*private fun shareNote() {
         note?.let {
             val shareText = "${it.title}\n\n${it.content}\n\n— Shared from Notes App"
             val intent = android.content.Intent(android.content.Intent.ACTION_SEND).apply {
@@ -116,5 +115,5 @@ class NoteDetailActivity : AppCompatActivity() {
             startActivity(android.content.Intent.createChooser(intent, "Share Note"))
             Log.d(TAG, "Sharing note: ${it.title}")
         }
-    }
+    }*/
 }
