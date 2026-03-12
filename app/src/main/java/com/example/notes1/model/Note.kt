@@ -21,7 +21,7 @@ data class Note(
     @ColumnInfo(name = "timestamp")
     val timestamp: Long = System.currentTimeMillis(),
     @ColumnInfo(name = "color")
-    @Ignore val color: Int = 0
+    val color: Int = 0
 ) : Parcelable {
 
     fun getFormattedDate(): String {

@@ -1,4 +1,5 @@
 package com.example.notes1
+
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -22,30 +23,35 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.notes1.adapter.NotesAdapter
-
+import com.example.notes1.database.NoteDatabase
+import com.example.notes1.databinding.ActivityMainBinding
 import com.example.notes1.model.Note
+import com.example.notes1.repository.NoteRepository
 import com.example.notes1.viewmodel.NotesViewModel
+import com.example.notes1.viewmodel.NotesViewModelFactory
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
 
-
-
     companion object {
         private const val TAG = "MainActivity"
         const val EXTRA_NOTE = "extra_note"
-
     }
 
-    // ViewModel survives rotation via SavedStateHandle
-    private val viewModel: NotesViewModel by viewModels()
+    // ✅ Repository initialized before ViewModel
+    private lateinit var repository: NoteRepository
+
+    // ✅ ViewModel now uses factory
+    private val viewModel: NotesViewModel by viewModels {
+        NotesViewModelFactory(repository)
+    }
+
     private lateinit var adapter: NotesAdapter
     private lateinit var rvNotes: RecyclerView
     private lateinit var tvEmpty: TextView
     private lateinit var tvNoteCount: TextView
     private lateinit var etSearch: EditText
 
-    // Permission launcher
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
@@ -58,7 +64,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Activity result for AddNoteActivity
     private val addNoteLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -77,10 +82,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // ✅ Initialize database and repository FIRST
+        val database = NoteDatabase.getDatabase(this)
+        repository = NoteRepository(database.noteDao())
+
         Log.d(TAG, "onCreate() called | savedInstanceState=${savedInstanceState != null}")
         setContentView(R.layout.activity_main)
 
@@ -92,41 +100,19 @@ class MainActivity : AppCompatActivity() {
         requestStoragePermission()
     }
 
-    override fun onStart() {
-        super.onStart()
-        Log.d(TAG, "onStart() called")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.d(TAG, "onResume() called")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Log.d(TAG, "onPause() called")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.d(TAG, "onStop() called")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d(TAG, "onDestroy() called")
-    }
-
+    override fun onStart() { super.onStart(); Log.d(TAG, "onStart() called") }
+    override fun onResume() { super.onResume(); Log.d(TAG, "onResume() called") }
+    override fun onPause() { super.onPause(); Log.d(TAG, "onPause() called") }
+    override fun onStop() { super.onStop(); Log.d(TAG, "onStop() called") }
+    override fun onDestroy() { super.onDestroy(); Log.d(TAG, "onDestroy() called") }
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        Log.d(TAG, "onSaveInstanceState() called — ViewModel handles state")
+        Log.d(TAG, "onSaveInstanceState() called")
     }
-
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         Log.d(TAG, "onRestoreInstanceState() called")
     }
-
 
     private fun setupToolbar() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
@@ -159,7 +145,6 @@ class MainActivity : AppCompatActivity() {
                 true
             }
         )
-
         rvNotes.layoutManager = LinearLayoutManager(this)
         rvNotes.adapter = adapter
         rvNotes.setHasFixedSize(true)
@@ -173,8 +158,6 @@ class MainActivity : AppCompatActivity() {
             }
             override fun afterTextChanged(s: Editable?) {}
         })
-
-        // Restore search query after rotation
         viewModel.searchQuery.value?.let {
             if (it.isNotEmpty()) etSearch.setText(it)
         }
@@ -184,11 +167,10 @@ class MainActivity : AppCompatActivity() {
         viewModel.filteredNotes.observe(this) { notes ->
             adapter.submitList(notes.toList())
             tvEmpty.visibility = if (notes.isEmpty()) View.VISIBLE else View.GONE
-            tvNoteCount.text = "${viewModel.getNoteCount()} note${if (viewModel.getNoteCount() != 1) "s" else ""}"
+            // ✅ uses notes.size instead of getNoteCount()
+            tvNoteCount.text = "${notes.size} note${if (notes.size != 1) "s" else ""}"
         }
     }
-
-
 
     private fun requestStoragePermission() {
         val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -196,13 +178,11 @@ class MainActivity : AppCompatActivity() {
         } else {
             Manifest.permission.READ_EXTERNAL_STORAGE
         }
-
         when {
             ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED -> {
                 Log.d(TAG, "Storage permission already granted")
             }
             shouldShowRequestPermissionRationale(permission) -> {
-                Log.d(TAG, "Showing permission rationale")
                 AlertDialog.Builder(this)
                     .setTitle("Storage Permission")
                     .setMessage("This app needs storage access to attach images to your notes.")
@@ -210,14 +190,9 @@ class MainActivity : AppCompatActivity() {
                     .setNegativeButton("Skip", null)
                     .show()
             }
-            else -> {
-                Log.d(TAG, "Requesting storage permission")
-                permissionLauncher.launch(permission)
-            }
+            else -> permissionLauncher.launch(permission)
         }
     }
-
-
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
@@ -238,8 +213,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
-
     private fun showDeleteDialog(note: Note) {
         AlertDialog.Builder(this)
             .setTitle("Delete Note")
@@ -256,7 +229,7 @@ class MainActivity : AppCompatActivity() {
     private fun showAboutDialog() {
         AlertDialog.Builder(this)
             .setTitle("Notes App")
-            .setMessage("A sample Android Notes App demonstrating:\n\n• RecyclerView with DiffUtil\n• ViewModel + SavedStateHandle\n• Runtime Permissions\n• Lifecycle Callbacks\n• Multi-screen navigation")
+            .setMessage("A sample Android Notes App demonstrating:\n\n• RecyclerView with DiffUtil\n• ViewModel + Room Database\n• Runtime Permissions\n• Lifecycle Callbacks\n• Multi-screen navigation")
             .setPositiveButton("OK", null)
             .show()
     }
