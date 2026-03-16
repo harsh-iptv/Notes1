@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.example.notes1.model.Note
 
+
 class AddNoteActivity : AppCompatActivity() {
 
     companion object {
@@ -100,7 +101,7 @@ class AddNoteActivity : AppCompatActivity() {
             return
         }
 
-        val note = Note(title = title, content = content)
+        val note = Note(title = title, content = content, isActive=true, value1 = 0)
         Log.i(TAG, "Saving note: $title")
 
         val resultIntent = Intent()

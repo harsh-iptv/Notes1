@@ -6,6 +6,7 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.notes1.model.Note
 import com.example.notes1.repository.NoteRepository
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
@@ -15,6 +16,7 @@ class NotesViewModel(private val repository: NoteRepository) : ViewModel() {
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: LiveData<String> = _searchQuery.asLiveData()
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     val filteredNotes: LiveData<List<Note>> = _searchQuery
         .flatMapLatest { query ->
             if (query.isBlank()) {
@@ -37,7 +39,7 @@ class NotesViewModel(private val repository: NoteRepository) : ViewModel() {
 
     fun deleteNote(noteId: Long) {
         viewModelScope.launch {
-            val note = Note(id = noteId, title = "", content = "")
+            val note = Note(id = noteId, title = "", content = "", isActive=true,value1=0)
             repository.deleteNote(note)
         }
     }

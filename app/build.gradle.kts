@@ -43,11 +43,9 @@ android {
 }
 
 dependencies {
-    val room_version = "2.8.4"
-    implementation("androidx.room:room-runtime:$room_version")
-    annotationProcessor("androidx.room:room-compiler:$room_version")
-    implementation("androidx.room:room-ktx:$room_version")
+    implementation("androidx.room:room-runtime:2.8.4")
     ksp(libs.androidx.room.compiler)
+    implementation("androidx.room:room-ktx:2.8.4")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

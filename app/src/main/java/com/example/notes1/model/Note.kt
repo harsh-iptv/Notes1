@@ -1,5 +1,6 @@
 package com.example.notes1.model
 
+import android.R
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -21,7 +22,12 @@ data class Note(
     @ColumnInfo(name = "timestamp")
     val timestamp: Long = System.currentTimeMillis(),
     @ColumnInfo(name = "color")
-    val color: Int = 0
+    val color: Int = 0,
+    @ColumnInfo(name="isActive")
+    val isActive: Boolean=true,
+    @ColumnInfo(name="value1")
+    val value1:Int=0
+
 ) : Parcelable {
 
     fun getFormattedDate(): String {
